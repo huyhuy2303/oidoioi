@@ -1,0 +1,65 @@
+services:
+  mongo:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+
+  server:
+    build: ./server
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017/rmit_database
+      - CLIENT_URL=http://localhost:8080
+      - BASE_API_URL=api
+      - JWT_SECRET=dev_secret_string
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  client:
+    build: ./client
+    environment:
+      - API_PROXY_TARGET=http://server:3000
+      - ENV_FILE=.env.example
+    command: /bin/sh -lc "echo 'API_URL=/api' > .env.example && npm run dev"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/rules.yml:/etc/prometheus/rules.yml:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+      - --web.enable-admin-api
+    ports:
+      - "9090:9090"
+    depends_on:
+      - server
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.tmpl.yml:/etc/alertmanager/alertmanager.tmpl.yml:ro
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --log.level=debug
+    ports:
+      - "9093:9093"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus

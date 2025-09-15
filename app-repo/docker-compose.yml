@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+    networks:
+      - ecommerce
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == docker-master
+
+  server:
+    image: hungngo040/server:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/rmit_ecommerce
+    depends_on:
+      - mongo
+    networks:
+      - ecommerce
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == docker-worker1
+
+  client:
+    image: hungngo040/client:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+    networks:
+      - ecommerce
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == docker-worker2
+networks:
+  ecommerce:

@@ -1,0 +1,25 @@
+groups:
+  - name: service-alerts
+    rules:
+      - alert: ServerDown
+        expr: up{job="server"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server is down"
+          description: "Prometheus cannot scrape the Node server /metrics."
+
+      - alert: HighErrorRate
+        expr: |
+          (sum(rate(http_requests_total{status_code=~"5.."}[5m])) by (job))
+          /
+          (sum(rate(http_requests_total[5m])) by (job))
+          > 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High 5xx error rate"
+          description: "More than 20% of requests are failing with 5xx over 5m."
+

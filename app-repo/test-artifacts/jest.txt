@@ -1,0 +1,25 @@
+
+> rmit-ecommerce@1.0.0 test
+> npm-run-all --continue-on-error -p test:*
+
+
+> rmit-ecommerce@1.0.0 test:client
+> npm --prefix ./client test
+
+
+> rmit-ecommerce@1.0.0 test:server
+> npm --prefix ./server test
+
+
+> server@1.0.0 test
+> jest --runInBand
+
+
+> client@1.0.0 test
+> jest
+
+  console.log
+    ✓ MongoDB Connected!
+
+      at log (utils/db.js:21:17)
+

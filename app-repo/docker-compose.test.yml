@@ -1,0 +1,62 @@
+services:
+  mongo:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build: ./server
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017/rmit_database
+      - CLIENT_URL=http://client:8080
+      - BASE_API_URL=api
+      - JWT_SECRET=dev_secret_string
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
+  client:
+    build: ./client
+    depends_on:
+      - server
+    environment:
+      - API_PROXY_TARGET=http://server:3000
+      - ENV_FILE=.env.example
+    # Override .env to use relative API path so browser calls are proxied
+    command: /bin/sh -lc "echo 'API_URL=/api' > .env.example && npm run dev"
+    ports:
+      - "8080:8080"
+
+  tester:
+    image: mcr.microsoft.com/playwright:v1.48.2-jammy
+    working_dir: /work
+    volumes:
+      - ./:/work
+    environment:
+      - CI=true
+      - E2E_EXTERNAL=1
+      - E2E_API_BASE=http://server:3000
+      - E2E_BASE_URL=http://client:8080
+      - MONGO_URI=mongodb://mongo:27017/rmit_database
+      - E2E_ADMIN_EMAIL=admin@rmit.edu.vn
+      - E2E_ADMIN_PASS=mypassword
+      # Optional: email alerts on failure
+      - ALERT_EMAIL_ENABLED=${ALERT_EMAIL_ENABLED:-0}
+      - SMTP_HOST
+      - SMTP_PORT=587
+      - SMTP_USER
+      - SMTP_PASS
+      - ALERT_FROM
+      - ALERT_TO
+    depends_on:
+      - server
+      - client
+    # Install deps, run unit/integration tests, then E2E against running services, and print summary + paths
+    command: /bin/bash -lc "chmod +x scripts/run-tests.sh && scripts/run-tests.sh"

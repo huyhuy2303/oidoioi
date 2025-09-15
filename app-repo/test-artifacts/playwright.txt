@@ -1,0 +1,13 @@
+
+> rmit-ecommerce@1.0.0 e2e:external
+> cross-env E2E_EXTERNAL=1 playwright test
+
+
+Running 4 tests using 3 workers
+
+  ✓  2 [chromium] › e2e/shop.spec.js:8:3 › Shop page › loads and lists products (1.8s)
+  ✓  1 [chromium] › e2e/auth.spec.js:8:3 › Auth flow › login and logout (2.4s)
+  ✓  3 [chromium] › e2e/cart.spec.js:29:3 › Cart + Checkout › unauthenticated: add to cart then proceed to checkout -> redirects to login (2.8s)
+  ✓  4 [chromium] › e2e/cart.spec.js:46:3 › Cart + Checkout › authenticated: add to cart then place order -> success page (2.8s)
+
+  4 passed (11.3s)
