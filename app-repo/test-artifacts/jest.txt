@@ -3,12 +3,12 @@
 > npm-run-all --continue-on-error -p test:*
 
 
-> rmit-ecommerce@1.0.0 test:client
-> npm --prefix ./client test
-
-
 > rmit-ecommerce@1.0.0 test:server
 > npm --prefix ./server test
+
+
+> rmit-ecommerce@1.0.0 test:client
+> npm --prefix ./client test
 
 
 > server@1.0.0 test

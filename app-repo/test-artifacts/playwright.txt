@@ -5,9 +5,44 @@
 
 Running 4 tests using 3 workers
 
-  ✓  2 [chromium] › e2e/shop.spec.js:8:3 › Shop page › loads and lists products (1.8s)
-  ✓  1 [chromium] › e2e/auth.spec.js:8:3 › Auth flow › login and logout (2.4s)
-  ✓  3 [chromium] › e2e/cart.spec.js:29:3 › Cart + Checkout › unauthenticated: add to cart then proceed to checkout -> redirects to login (2.8s)
-  ✓  4 [chromium] › e2e/cart.spec.js:46:3 › Cart + Checkout › authenticated: add to cart then place order -> success page (2.8s)
+  ✓  2 [chromium] › e2e/shop.spec.js:8:3 › Shop page › loads and lists products (1.7s)
+  ✓  3 [chromium] › e2e/cart.spec.js:29:3 › Cart + Checkout › unauthenticated: add to cart then proceed to checkout -> redirects to login (2.9s)
+  ✓  4 [chromium] › e2e/cart.spec.js:46:3 › Cart + Checkout › authenticated: add to cart then place order -> success page (2.9s)
+  ✘  1 [chromium] › e2e/auth.spec.js:8:3 › Auth flow › login and logout (11.1s)
 
-  4 passed (11.3s)
+
+  1) [chromium] › e2e/auth.spec.js:8:3 › Auth flow › login and logout ──────────────────────────────
+
+    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Expected pattern: [32m/\/dashboard/[39m
+    Received string:  [31m"http://client:8080/login"[39m
+    Timeout: 10000ms
+
+    Call log:
+    [2m  - Expect "toHaveURL" with timeout 10000ms[22m
+    [2m    14 × unexpected value "http://client:8080/login"[22m
+
+
+      24 |
+      25 |     // Expect redirect to dashboard
+    > 26 |     await expect(page).toHaveURL(/\/dashboard/);
+         |                        ^
+      27 |
+      28 |     // Logout (stable): clear token and verify protected route redirects to /login
+      29 |     await page.waitForLoadState('networkidle');
+        at /work/e2e/auth.spec.js:26:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/auth-Auth-flow-login-and-logout-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/auth-Auth-flow-login-and-logout-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/auth-Auth-flow-login-and-logout-chromium/error-context.md
+
+  1 failed
+    [chromium] › e2e/auth.spec.js:8:3 › Auth flow › login and logout ───────────────────────────────
+  3 passed (14.4s)

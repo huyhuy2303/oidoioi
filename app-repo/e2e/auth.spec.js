@@ -20,8 +20,7 @@ test.describe('Auth flow', () => {
     await form.getByPlaceholder('Enter Your Email Address').fill(ADMIN_EMAIL);
     await form.getByPlaceholder('Enter Your Password').fill(ADMIN_PASS);
 
-    // Submit
-    await form.getByRole('button', { name: 'Sign In' }).click();
+
 
     // Expect redirect to dashboard
     await expect(page).toHaveURL(/\/dashboard/);
