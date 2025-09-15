@@ -10,7 +10,7 @@ services:
       retries: 10
 
   server:
-    build: ./server
+    image: server:latest
     environment:
       - PORT=3000
       - MONGO_URI=mongodb://mongo:27017/rmit_database
@@ -23,7 +23,7 @@ services:
       - "3000:3000"
 
   client:
-    build: ./client
+    image: client:latest
     depends_on:
       - server
     environment:
