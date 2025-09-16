@@ -46,7 +46,10 @@ services:
   alertmanager:
     image: prom/alertmanager:v0.27.0
     volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
       - ./monitoring/alertmanager/alertmanager.tmpl.yml:/etc/alertmanager/alertmanager.tmpl.yml:ro
+    environment:
+      ALERTMANAGER_SMTP_PASS: ${ALERTMANAGER_SMTP_PASS:-}
     command:
       - --config.file=/etc/alertmanager/alertmanager.yml
       - --storage.path=/alertmanager

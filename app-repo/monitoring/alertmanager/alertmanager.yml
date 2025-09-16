@@ -9,8 +9,8 @@ receivers:
   - name: team-email
     email_configs:
       - to: trantronghuy2303@gmail.com
-        from: tronghuy2303@gmail.com
+        from: thanhchungaff@gmail.com
         smarthost: smtp.gmail.com:587
-        auth_username: tronghuy2303@gmail.com
-        auth_password: Kucausepang@230304
+        auth_username: thanhchungaff@gmail.com
+        auth_password: hthkcbjjrylwgoij
         require_tls: true
