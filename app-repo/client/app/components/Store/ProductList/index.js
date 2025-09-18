@@ -14,7 +14,7 @@ const ProductList = props => {
   const { products, updateWishlist, authenticated } = props;
 
   return (
-    <div className='product-list'>
+    <div >
       {products.map((product, index) => (
         <div key={index} className='mb-3 mb-md-0'>
           <div className='product-container'>
